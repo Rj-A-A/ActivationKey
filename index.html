@@ -131,28 +131,38 @@ function generateRJKey(deviceId) {
 
 window.addEventListener('load', function() {
     const displayBox = document.getElementById("finalKeyDisplay");
-    let foundKey = null;
-    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Show Scanning first
+    displayBox.innerText = "Scanning...";
+    displayBox.style.color = "#ffffff";
+    displayBox.style.borderColor = "#00ffcc";
+    displayBox.style.boxShadow = "0 0 15px rgba(0,255,204,0.3)";
 
-    // 1. If ?key=VALUE
-    if (urlParams.has('key')) {
-        foundKey = urlParams.get('key');
-    } 
-    // 2. If ?device=VALUE -> generate RJ key
-    else if (urlParams.has('device')) {
-        const deviceId = urlParams.get('device');
-        foundKey = generateRJKey(deviceId);
-    } 
-    // 3. Fallback
-    else {
-        foundKey = "NO KEY FOUND IN URL";
-    }
+    // Delay 1.5s before generating key
+    setTimeout(function() {
+        let foundKey = null;
+        const urlParams = new URLSearchParams(window.location.search);
 
-    // Display the key
-    displayBox.innerText = foundKey;
-    displayBox.style.color = (foundKey === "NO KEY FOUND IN URL") ? "#ff4d4d" : "#00ffcc";
-    displayBox.style.borderColor = displayBox.style.color;
-    displayBox.style.boxShadow = (foundKey === "NO KEY FOUND IN URL") ? "none" : "0 0 15px rgba(0,255,204,0.3)";
+        // 1. If ?key=VALUE
+        if (urlParams.has('key')) {
+            foundKey = urlParams.get('key');
+        } 
+        // 2. If ?device=VALUE -> generate RJ key
+        else if (urlParams.has('device')) {
+            const deviceId = urlParams.get('device');
+            foundKey = generateRJKey(deviceId);
+        } 
+        // 3. Fallback
+        else {
+            foundKey = "NO KEY FOUND IN URL";
+        }
+
+        // Display the key
+        displayBox.innerText = foundKey;
+        displayBox.style.color = (foundKey === "NO KEY FOUND IN URL") ? "#ff4d4d" : "#00ffcc";
+        displayBox.style.borderColor = displayBox.style.color;
+        displayBox.style.boxShadow = (foundKey === "NO KEY FOUND IN URL") ? "none" : "0 0 15px rgba(0,255,204,0.3)";
+    }, 1500); // 1.5 seconds delay
 });
 
 function copyMyKey(btn) {
