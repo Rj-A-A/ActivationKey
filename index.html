@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Your Key | RJAcido</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+        body {
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .rj-key-widget {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            margin: 20px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: fadeIn 0.6s ease-out;
+        }
+        .rj-key-widget h3 {
+            margin: 0 0 10px 0;
+            color: #00ffcc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1.3rem;
+        }
+        .rj-status {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 15px;
+        }
+        .rj-key-box {
+            background: #0f172a;
+            border: 2px dashed #00ffcc;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 1.6rem;
+            font-weight: bold;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            word-break: break-all;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .rj-btn {
+            background-color: #00ffcc;
+            color: #0f172a;
+            border: none;
+            padding: 12px 35px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 255, 204, 0.3);
+        }
+        .rj-btn:hover {
+            background-color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.7);
+            transform: translateY(-2px);
+        }
+        .rj-btn:active {
+            transform: translateY(0);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #64748b;
+            text-align: center;
+        }
+        .footer a {
+            color: #00ffcc;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="rj-key-widget">
+        <h3>Get Your Key</h3>
+        <p class="rj-status">System Status: Ready</p>
+        
+        <div id="finalKeyDisplay" class="rj-key-box">
+            Scanning...
+        </div>
+        <button class="rj-btn" onclick="copyMyKey(this)">Copy Key</button>
+
+        <div class="footer">
+            Powered by <a href="https://dpmods.com" target="_blank">RJAcido</a> | Gateway V8.1
+        </div>
+    </div>
+
+    <script>
+        // --- SETTINGS ---
+        // Parameters to ignore (Blogger adds 'm=1' for mobile, we must skip it)
+        const ignoredParams = ['m', 'commentPage', 'zx', 'utm_source', 'utm_medium', 'utm_campaign'];
+
+        window.addEventListener('load', function() {
+            const displayBox = document.getElementById("finalKeyDisplay");
+            let foundKey = null;
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // 1. Priority Check: ?key=VALUE
+            if (urlParams.has('key')) {
+                foundKey = urlParams.get('key');
+            }
+            // 2. Smart Check: ?VALUE (like ?cyber77)
+            else {
+                // Loop through all parameters found in URL
+                for(const [key, value] of urlParams.entries()) {
+                    // If this parameter is NOT in our ignore list, it must be the key!
+                    if (!ignoredParams.includes(key)) {
+                        foundKey = key;
+                        break; // Stop after finding the first valid key
+                    }
+                }
+            }
+            // 3. Fallback Check: #VALUE
+            if (!foundKey && window.location.hash) {
+                foundKey = window.location.hash.substring(1);
+            }
+
+            // --- DISPLAY RESULT ---
+            if (foundKey && foundKey !== "") {
+                // Clean special characters
+                try { foundKey = decodeURIComponent(foundKey); } catch(e) {}
+                
+                displayBox.innerText = foundKey;
+                displayBox.style.color = "#00ffcc";
+                displayBox.style.borderColor = "#00ffcc";
+                displayBox.style.boxShadow = "0 0 15px rgba(0, 255, 204, 0.3)";
+            } else {
+                displayBox.innerText = "NO KEY FOUND IN URL";
+                displayBox.style.color = "#ff4d4d";
+                displayBox.style.borderColor = "#ff4d4d";
+            }
+        });
+
+        function copyMyKey(btn) {
+            const txt = document.getElementById("finalKeyDisplay").innerText;
+            if (txt !== "NO KEY FOUND IN URL" && txt !== "Scanning...") {
+                navigator.clipboard.writeText(txt).then(() => {
+                    const originalText = btn.innerText;
+                    btn.innerText = "Copied!";
+                    btn.style.background = "#00ff9d";
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                        btn.style.background = "#00ffcc";
+                    }, 2000);
+                });
+            } else {
+                alert("No key detected in URL.");
+            }
+        }
+    </script>
+</body>
+</html>
