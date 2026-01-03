@@ -4,84 +4,153 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Get Your Key | RJAcido</title>
+
 <style>
-body { background:#0f172a; color:#e2e8f0; font-family:'Segoe UI', Tahoma, sans-serif; display:flex; justify-content:center; align-items:center; min-height:100vh; margin:0; }
-.rj-key-widget { background:#1e293b; border-radius:12px; padding:25px; text-align:center; max-width:500px; width:100%; box-shadow:0 10px 30px rgba(0,0,0,0.5);}
-.rj-key-widget h3 { color:#00ffcc; text-transform:uppercase; margin-bottom:10px; }
-.rj-status { color:#94a3b8; margin-bottom:15px; font-size:0.9rem; }
-.rj-key-box { background:#0f172a; border:2px dashed #00ffcc; color:#fff; font-family:'Courier New', monospace; font-size:1.6rem; font-weight:bold; padding:15px; margin-bottom:20px; border-radius:8px; min-height:40px; display:flex; justify-content:center; align-items:center; transition:all 0.3s;}
-.rj-btn { background:#00ffcc; color:#0f172a; border:none; padding:12px 35px; font-weight:bold; border-radius:50px; cursor:pointer; box-shadow:0 4px 15px rgba(0,255,204,0.3);}
-.rj-btn:hover { background:#ffffff; box-shadow:0 0 20px rgba(0,255,204,0.7); transform:translateY(-2px);}
-.rj-btn:active { transform:translateY(0);}
-.footer { margin-top:30px; font-size:0.8rem; color:#64748b; text-align:center;}
-.footer a { color:#00ffcc; text-decoration:none;}
+body {
+  background:#0f172a;
+  color:#e2e8f0;
+  font-family:'Segoe UI', Tahoma, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  margin:0;
+}
+.rj-key-widget {
+  background:#1e293b;
+  border-radius:12px;
+  padding:25px;
+  text-align:center;
+  max-width:500px;
+  width:100%;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+.rj-key-widget h3 {
+  color:#00ffcc;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.rj-status {
+  color:#94a3b8;
+  margin-bottom:15px;
+  font-size:0.9rem;
+}
+.rj-key-box {
+  background:#0f172a;
+  border:2px dashed #00ffcc;
+  color:#fff;
+  font-family:'Courier New', monospace;
+  font-size:1.6rem;
+  font-weight:bold;
+  padding:15px;
+  margin-bottom:20px;
+  border-radius:8px;
+  min-height:40px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition:all 0.3s;
+}
+.rj-btn {
+  background:#00ffcc;
+  color:#0f172a;
+  border:none;
+  padding:12px 35px;
+  font-weight:bold;
+  border-radius:50px;
+  cursor:pointer;
+  box-shadow:0 4px 15px rgba(0,255,204,0.3);
+}
+.rj-btn:hover {
+  background:#ffffff;
+  box-shadow:0 0 20px rgba(0,255,204,0.7);
+  transform:translateY(-2px);
+}
+.rj-btn:active {
+  transform:translateY(0);
+}
+.footer {
+  margin-top:30px;
+  font-size:0.8rem;
+  color:#64748b;
+  text-align:center;
+}
+.footer a {
+  color:#00ffcc;
+  text-decoration:none;
+}
 </style>
 </head>
+
 <body>
 
 <div class="rj-key-widget">
-    <h3>Get Your Key</h3>
-    <p class="rj-status">System Status: Ready</p>
-    <div id="finalKeyDisplay" class="rj-key-box">Scanning...</div>
-    <button class="rj-btn" onclick="copyMyKey(this)">Copy Key</button>
-    <div class="footer">Powered by <a href="https://dpmods.com" target="_blank">RJAcido</a> | Gateway V8.1</div>
+  <h3>Get Your Key</h3>
+  <p class="rj-status">System Status: Ready</p>
+
+  <div id="finalKeyDisplay" class="rj-key-box">Scanning...</div>
+
+  <button class="rj-btn" onclick="copyMyKey(this)">Copy Key</button>
+
+  <div class="footer">
+    Powered by <a href="https://dpmods.com" target="_blank">RJAcido</a> | Gateway V8.1
+  </div>
 </div>
 
 <script>
+// --- RJ KEY GENERATOR (UNCHANGED) ---
 function generateRJKey(seed) {
-    let hash = 0;
-    for (let i = 0; i < seed.length; i++) {
-        hash = (hash << 5) - hash + seed.charCodeAt(i);
-        hash |= 0;
-    }
-    hash = Math.abs(hash);
-    let code = hash.toString(36).toUpperCase().replace(/[^A-Z0-9]/g,'');
-    if(code.length < 5) code = code.padEnd(5,'X');
-    else if(code.length > 5) code = code.substring(0,5);
-    return "RJ-" + code;
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash << 5) - hash + seed.charCodeAt(i);
+    hash |= 0;
+  }
+  hash = Math.abs(hash);
+  let code = hash.toString(36).toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if (code.length < 5) code = code.padEnd(5,'X');
+  else if (code.length > 5) code = code.substring(0,5);
+  return "RJ-" + code;
 }
 
-const finalKeyDisplay = document.getElementById("finalKeyDisplay");
-
 // --- SCANNING ANIMATION ---
+const finalKeyDisplay = document.getElementById("finalKeyDisplay");
 let dots = 0;
-const scanningInterval = setInterval(()=>{
-    dots = (dots + 1) % 4;
-    finalKeyDisplay.innerText = "Scanning" + ".".repeat(dots);
+
+const scanningInterval = setInterval(() => {
+  dots = (dots + 1) % 4;
+  finalKeyDisplay.innerText = "Scanning" + ".".repeat(dots);
 }, 400);
 
-// --- GENERATE KEY AFTER DELAY ---
-setTimeout(()=>{
-    clearInterval(scanningInterval);
+// --- GENERATE KEY AFTER SCANNING ---
+setTimeout(() => {
+  clearInterval(scanningInterval);
 
-    // 1. Kunin ang key mula sa URL ?key=VALUE
-    const urlParams = new URLSearchParams(window.location.search);
-    let key = urlParams.get('key'); // kunin ?key=
+  // RANDOM SEED (same behavior as before)
+  const seed = Math.random().toString(36).substring(2, 12);
+  const key = generateRJKey(seed);
 
-    // 2. Fallback kung walang key sa URL, random seed
-    if(!key || key === ""){
-        const seed = Math.random().toString(36).substring(2,12);
-        key = generateRJKey(seed);
-    }
-
-    // 3. I-display ang key
-    finalKeyDisplay.innerText = key;
-    finalKeyDisplay.style.color = "#00ffcc";
-    finalKeyDisplay.style.borderColor = "#00ffcc";
-    finalKeyDisplay.style.boxShadow = "0 0 15px rgba(0,255,204,0.3)";
+  finalKeyDisplay.innerText = key;
+  finalKeyDisplay.style.color = "#00ffcc";
+  finalKeyDisplay.style.borderColor = "#00ffcc";
+  finalKeyDisplay.style.boxShadow = "0 0 15px rgba(0,255,204,0.3)";
 }, 1500);
 
 // --- COPY BUTTON ---
-function copyMyKey(btn){
-    const txt = finalKeyDisplay.innerText;
-    if(txt !== "Scanning..." && txt !== ""){
-        navigator.clipboard.writeText(txt).then(()=>{
-            const orig = btn.innerText;
-            btn.innerText = "Copied!";
-            btn.style.background = "#00ff9d";
-            setTimeout(()=>{ btn.innerText = orig; btn.style.background = "#00ffcc"; }, 2000);
-        });
-    } else alert("No key to copy yet.");
+function copyMyKey(btn) {
+  const txt = finalKeyDisplay.innerText;
+  if (txt !== "Scanning..." && txt !== "") {
+    navigator.clipboard.writeText(txt).then(() => {
+      const orig = btn.innerText;
+      btn.innerText = "Copied!";
+      btn.style.background = "#00ff9d";
+      setTimeout(() => {
+        btn.innerText = orig;
+        btn.style.background = "#00ffcc";
+      }, 2000);
+    });
+  } else {
+    alert("No key to copy yet.");
+  }
 }
 </script>
 
