@@ -114,67 +114,54 @@
     </div>
 
     <script>
-        // --- SETTINGS ---
-        // Parameters to ignore (Blogger adds 'm=1' for mobile, we must skip it)
-        const ignoredParams = ['m', 'commentPage', 'zx', 'utm_source', 'utm_medium', 'utm_campaign'];
+    const secret = "rjacido_secret";
 
-        window.addEventListener('load', function() {
-            const displayBox = document.getElementById("finalKeyDisplay");
-            let foundKey = null;
-            const urlParams = new URLSearchParams(window.location.search);
+    window.addEventListener('load', function() {
+        const displayBox = document.getElementById("finalKeyDisplay");
+        let foundKey = null;
+        const urlParams = new URLSearchParams(window.location.search);
 
-            // 1. Priority Check: ?key=VALUE
-            if (urlParams.has('key')) {
-                foundKey = urlParams.get('key');
-            }
-            // 2. Smart Check: ?VALUE (like ?cyber77)
-            else {
-                // Loop through all parameters found in URL
-                for(const [key, value] of urlParams.entries()) {
-                    // If this parameter is NOT in our ignore list, it must be the key!
-                    if (!ignoredParams.includes(key)) {
-                        foundKey = key;
-                        break; // Stop after finding the first valid key
-                    }
-                }
-            }
-            // 3. Fallback Check: #VALUE
-            if (!foundKey && window.location.hash) {
-                foundKey = window.location.hash.substring(1);
-            }
-
-            // --- DISPLAY RESULT ---
-            if (foundKey && foundKey !== "") {
-                // Clean special characters
-                try { foundKey = decodeURIComponent(foundKey); } catch(e) {}
-                
-                displayBox.innerText = foundKey;
-                displayBox.style.color = "#00ffcc";
-                displayBox.style.borderColor = "#00ffcc";
-                displayBox.style.boxShadow = "0 0 15px rgba(0, 255, 204, 0.3)";
-            } else {
-                displayBox.innerText = "NO KEY FOUND IN URL";
-                displayBox.style.color = "#ff4d4d";
-                displayBox.style.borderColor = "#ff4d4d";
-            }
-        });
-
-        function copyMyKey(btn) {
-            const txt = document.getElementById("finalKeyDisplay").innerText;
-            if (txt !== "NO KEY FOUND IN URL" && txt !== "Scanning...") {
-                navigator.clipboard.writeText(txt).then(() => {
-                    const originalText = btn.innerText;
-                    btn.innerText = "Copied!";
-                    btn.style.background = "#00ff9d";
-                    setTimeout(() => {
-                        btn.innerText = originalText;
-                        btn.style.background = "#00ffcc";
-                    }, 2000);
-                });
-            } else {
-                alert("No key detected in URL.");
-            }
+        // --- CHECK URL PARAMETER FIRST ---
+        if (urlParams.has('key')) {
+            foundKey = urlParams.get('key');
+        } else if (urlParams.has('device')) {
+            // --- GENERATE KEY FROM DEVICE ID ---
+            const deviceId = urlParams.get('device');
+            let raw = deviceId + secret;
+            let base64 = btoa(raw).replace(/=/g,"");
+            if (base64.length > 40) base64 = base64.substring(0,40);
+            foundKey = base64;
+        } else {
+            // --- FALLBACK / NO PARAMETER ---
+            foundKey = "NO KEY FOUND IN URL"; // optional placeholder
         }
+
+        // --- DISPLAY RESULT ---
+        if (foundKey && foundKey !== "") {
+            try { foundKey = decodeURIComponent(foundKey); } catch(e){}
+            displayBox.innerText = foundKey;
+            displayBox.style.color = (foundKey === "NO KEY FOUND IN URL") ? "#ff4d4d" : "#00ffcc";
+            displayBox.style.borderColor = displayBox.style.color;
+            displayBox.style.boxShadow = (foundKey === "NO KEY FOUND IN URL") ? "none" : "0 0 15px rgba(0,255,204,0.3)";
+        }
+    });
+
+    function copyMyKey(btn) {
+        const txt = document.getElementById("finalKeyDisplay").innerText;
+        if (txt !== "NO KEY FOUND IN URL" && txt !== "Scanning...") {
+            navigator.clipboard.writeText(txt).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied!";
+                btn.style.background = "#00ff9d";
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = "#00ffcc";
+                }, 2000);
+            });
+        } else {
+            alert("No key detected in URL.");
+        }
+    }
     </script>
 </body>
 </html>
